@@ -46,8 +46,6 @@ def animate(stream, MAX_y):
     # col1 = int(sum(peak_buffer) / len(peak_buffer)) # find average of
     bar_length = int(sum(peak_buffer)/2)
     col1 = bar_length
-    if bar_length > max_bar_length:
-        max_bar_length = bar_length
     g_percent = 0.0  # %
     y_percent = 0.5  # %
     r_percent = 0.9  # %
@@ -56,8 +54,11 @@ def animate(stream, MAX_y):
     g_start = round(g_percent * max_bar_length)
     y_start = round(y_percent * max_bar_length)
     r_start = round(r_percent * max_bar_length)
+    #print(bar_length)
+    #print(max_bar_length)
+    #print(str(g_start) + ' : ' + str(y_start) + ' : ' + str(r_start))
     if bar_length > y_start:
-        g_length = round(bar_length - y_start)
+        g_length = round(bar_length - (bar_length - y_start))
     else:
         g_length = bar_length
     g_value = 'G' * g_length
@@ -68,17 +69,23 @@ def animate(stream, MAX_y):
         r_length = 0
         r_value = ""
     if bar_length > y_start:
-        y_length = round(g_length - r_length)
+        y_length = round(bar_length - y_start)
         y_value = "Y" * y_length
     else:
         y_length = 0
         y_value = ""
-
-    bar = g_value + y_value + r_value
+    g_ansi = "\033[1;32m" + g_value + "\x1b[0m"
+    y_ansi = "\033[1;33m" + y_value + "\x1b[0m"
+    r_ansi = "\033[1;31m" + r_value + "\x1b[0m"
+    bar = g_ansi + y_ansi + r_ansi
     peak_length = max_bar_length - len(bar)
     peak_pad = ' ' * peak_length
-    bar_print = bar + peak_pad + "#"
-    reset_count += 1
+    bar_print = bar + peak_pad + "\033[1;37m # \x1b[0m"
+    if bar_length > max_bar_length:
+        reset_count += 1
+    else:
+        max_bar_length = bar_length
+    print(reset_count)
     if reset_count == 50:
         reset_count = 0
         max_bar_length = bar_length

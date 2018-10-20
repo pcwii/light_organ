@@ -77,19 +77,22 @@ def animate(stream, MAX_y):
     g_ansi = "\033[1;32m" + g_value + "\x1b[0m"
     y_ansi = "\033[1;33m" + y_value + "\x1b[0m"
     r_ansi = "\033[1;31m" + r_value + "\x1b[0m"
-    bar = g_ansi + y_ansi + r_ansi
+    bar_ansi = g_ansi + y_ansi + r_ansi
+    bar = g_value + y_value + r_value
     peak_length = max_bar_length - len(bar)
+    print(len(bar))
+    print(peak_length)
     peak_pad = ' ' * peak_length
-    bar_print = bar + peak_pad + "\033[1;37m # \x1b[0m"
+    bar_print = bar_ansi + peak_pad + "\033[1;37m#\x1b[0m"
     if bar_length > max_bar_length:
-        reset_count += 1
-    else:
+        reset_count = 0
         max_bar_length = bar_length
-    print(reset_count)
+    else:
+        reset_count += 1
     if reset_count == 50:
         reset_count = 0
         max_bar_length = bar_length
-    print(bar_print)
+    print(str(reset_count).zfill(2) + " : " + bar_print)
 
 #    if (col1 > 90 and not trigger and (time.time() - lastChange) > 0.5 or (time.time() - lastChange > 5)):
 #        lastChange = time.time()
